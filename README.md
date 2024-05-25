@@ -1,7 +1,11 @@
 # AI Assistant Communication Framework
 *_**by Ivan Saldikov**_*
 
-Tech Stack:
+**Social**: https://www.linkedin.com/in/ivansaldikov/
+
+**Email**: i at armonia.day
+
+*Tech Stack*:
 - `Docker` (everything is packed here)
 - `Django`
 - `Postgres`
