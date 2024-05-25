@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-7">
+            <input type="range"
+                   class="form-range"
+                   min="{{ widget.min|stringformat:'s' }}"
+                   max="{{ widget.max|stringformat:'s' }}"
+                   step="{{ widget.step|stringformat:'s' }}"
+                    {% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}
+                   id="range{{ widget.name }}"
+                   oninput="updateNumber{{ widget.name }}()"
+            >
+        </div>
+        <div class="col-md-2 col-5">
+            <input type="{{ widget.type }}"
+                   name="{{ widget.name }}"
+                   min="{{ widget.min|stringformat:'s' }}"
+                   max="{{ widget.max|stringformat:'s' }}"
+                   id="number{{ widget.name }}"
+                   oninput="updateRange{{ widget.name }}()"
+                    {% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}
+                    {% include "django/forms/widgets/attrs.html" %}
+            >
+        </div>
+    </div>
+
+</div>
+
+<script>
+  function updateNumber{{ widget.name }}() {
+    let range_input_name = "#range{{ widget.name }}";
+    let number_input_name = "#number{{ widget.name }}";
+
+    let range_input = htmx.find(range_input_name);
+    let number_input = htmx.find(number_input_name);
+
+    number_input.value = range_input.value;
+  }
+
+  function updateRange{{ widget.name }}() {
+    let range_input_name = "#range{{ widget.name }}";
+    let number_input_name = "#number{{ widget.name }}";
+
+    let range_input = htmx.find(range_input_name);
+    let number_input = htmx.find(number_input_name);
+
+    range_input.value = number_input.value;
+  }
+
+</script>

@@ -1,0 +1,15 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+{# https://github.com/django/django/blob/master/django/contrib/admin/templates/admin/index.html #}
+
+{% block sidebar %}
+    <div id="content-related">
+        <div class="module" id="quicklinks">
+            <h2>Quick Links</h2>
+            <ul class="actionlist">
+                <li><a href="/">App</a></li>
+                <li><a href="{% url 'admin_dashboard:service_metrics' %}">Service Metrics</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

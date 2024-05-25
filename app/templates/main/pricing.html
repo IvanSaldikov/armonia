@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+
+    Armonia.day - Pricing
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+
+        <h1 class="display-6 text-center my-4">Pricing (compare plans)</h1>
+
+        {% include 'snippets/pricing.html' with country=country %}
+
+    </main>
+
+
+{% endblock %}
+
+
+{% block extra_head %}
+{% endblock %}

@@ -1,0 +1,95 @@
+{% load static %}
+
+<header>
+
+    <nav class="navbar navbar-expand-lg pt-1">
+        <div class="container-fluid p-0 d-flex justify-content-between">
+            <div class="mt-auto mb-auto">
+                <div class="fs-4">
+                    <a class="navbar-brand"
+                       href="{% url "problems-list-public" %}"
+                       data-bs-toggle-tooltip="tooltip"
+                       data-bs-title="Armonia.day"
+                    >
+                        🙏 Armonia.day
+                        {% if country %}
+                            {% if country.code|lower != 'xx' %}
+                                <span class="font-monospace" style="font-size: 0.45rem">
+                                            <i data-bs-toggle-tooltip="tooltip"
+                                               data-bs-title="{{ country.name }}"
+                                               class="{{ country.flag_css }}"
+                                            ></i>
+                                        </span>
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="font-monospace mb-0" style="font-size: 0.7rem">
+                    We bring Harmony to your day with AI Therapist...
+                </div>
+
+            </div>
+            <div>
+                <div class="navbar-collapse" id="navbarScroll">
+                    {% if is_purchasing %}
+                        <div class="ec-cart-widget"></div>
+                    {% endif %}
+
+                    <ul class="navbar-nav me-0 my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 200px; z-index: 1100;">
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    {{ request.user }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a
+                                            class="dropdown-item link-body-emphasis"
+                                            href="{% url 'problems-add-new-form' %}">Add new Problem to Solve</a>
+                                    </li>
+                                    <li><a
+                                            class="dropdown-item link-body-emphasis"
+                                            href="{% url 'problems-list-private' %}">My problems to Solve</a>
+                                    </li>
+{#                                    <li><a#}
+{#                                            class="dropdown-item link-body-emphasis"#}
+{#                                            href="{% url 'user_notification_connections' %}">Notifications</a>#}
+{#                                    </li>#}
+                                    <li><a
+                                            class="dropdown-item link-body-emphasis"
+                                            href="{% url 'user_email_messages' %}">Email Messages</a>
+                                    </li>
+                                    <li><a
+                                            class="dropdown-item link-body-emphasis"
+                                            href="{% url 'user_country' %}">Country
+                                        {% if country %}
+                                            {% if country.code|lower != 'xx' %}
+                                                <img src="{{ country.flag }}"
+                                                     alt="{{ country.name }}"
+                                                     data-bs-toggle-tooltip="tooltip"
+                                                     data-bs-title="Current country: {{ country.name }}"></a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a
+                                            class="dropdown-item link-body-emphasis"
+                                            href="{% url 'account_logout' %}">Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <a
+                                    class="me-3 py-2 link-body-emphasis text-decoration-none"
+                                    href="{% url 'account_signup' %}">Sign Up / Login
+                            </a>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+</header>

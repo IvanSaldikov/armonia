@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load static %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block title %}{% trans "Sign In" %}{% endblock %}
+{% block title_short %}{% trans "Sign In" %}{% endblock %}
+{% block title_short_2 %}{% trans "Sign In" %}{% endblock %}
+
+{# Load the tag library #}
+{% load django_bootstrap5 %}
+
+
+{% block content %}
+
+<div class="container">
+
+  <div class="row">
+
+    <div class="col-lg-3"></div>
+
+    <div class="col-lg-6 col-sm-12 text-center">
+
+        <h2 class="my-4">Sign Up / Login</h2>
+
+
+          <div class="email-login-form line">
+            <form class="form" method="POST" action="{% url 'account_login' %}">
+              {% csrf_token %}
+              {% bootstrap_form form %}
+              {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+              <div class="login__btns">
+                <button class="btn btn-lg btn-primary w-100" type="submit">{% trans "Login" %}</button>
+              </div>
+            </form>
+          </div>
+
+            {% get_providers as socialaccount_providers %}
+            <h4 class="login-or my-4">{% trans 'or' %}</h4>
+            {% if socialaccount_providers %}
+                  <div class="socialaccount_ballot">
+                    <ul class="socialaccount_providers px-0">
+                      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                    </ul>
+                  </div>
+                  {% include "socialaccount/snippets/login_extra.html" %}
+            {% endif %}
+
+
+
+    <div class="mt-4">
+        <p>{% blocktrans %}If you have not created an account yet and want to sign up with your email, then please
+        <a href="{{ signup_url }}">Sign Up here</a>.{% endblocktrans %}</p>
+    </div>
+
+      <div class="container mt-5">
+          <div class="alert alert-light" role="alert">
+              <small>By continuing you accept <a target="_blank" href="{% url 'privacy' %}">Privacy Policy</a>.</small>
+          </div>
+      </div>
+
+    <div class="col-lg-3"></div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_head %}
+    <!-- Font awesome CSS (for Social icons) -->
+    <link href="{% static 'main/assets/css/bootstrap-social.css' %}" rel="stylesheet">
+    <!-- BoxIcons -->
+    <link href="{% static 'main/assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+{% endblock %}

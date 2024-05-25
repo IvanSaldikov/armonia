@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+
+    Armonia.day - Thank you for purchasing
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+
+        <h1 class="display-6 text-center mb-4">Thank you!</h1>
+
+        <div class="table-responsive">
+            <div class="alert alert-light" role="alert">
+                <h5>Thank you for purchasing access for Armonia.day! You can continue chatting
+                    <a href="{% url 'problems-list-public' %}">here</a>.
+                </h5>
+            </div>
+        </div>
+
+    </main>
+
+
+{% endblock %}
+
+
+{% block extra_head %}
+
+    {% if not DEBUG and not TESTING %}
+        <!-- Google tag (gtag.js) event -->
+        <script>
+          gtag('event', 'conversion_event_purchase', {
+            // <event_parameters>
+          });
+        </script>
+    {% endif %}
+
+{% endblock %}

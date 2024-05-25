@@ -1,0 +1,131 @@
+{% load static %}
+
+<footer class="pt-4 my-md-5 my-sm-5 pt-md-5 border-top">
+
+    <div class="container">
+        <div class="alert alert-info">
+            * - If you are having a crisis situation, do not rely on this service. You should call 911/112 or go to the nearest emergency room. This AI Therapist is not a medical service. Do not ask it for medical advice and exercise your own judgement.
+        </div>
+    </div>
+
+    <div class="container">
+        <footer class="py-5">
+            <div class="row">
+                <div class="col-md-4 col-6">
+                    <h5>Main</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2">
+                            <a href="{% url "problems-list-public" %}"
+                               class="nav-link p-0 text-muted">
+                                Main
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "pricing" %}"
+                               class="nav-link p-0 text-muted">
+                                Pricing
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "terms" %}"
+                               class="nav-link p-0 text-muted">
+                                Terms of Use
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "privacy" %}"
+                               class="nav-link p-0 text-muted">
+                                Privacy Policy
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "contact-us" %}"
+                               class="nav-link p-0 text-muted">
+                                Feedback
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "about" %}"
+                               class="nav-link p-0 text-muted">
+                                About
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-6">
+                    <h5>Service</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2">
+                            <a href="{% url "problems-add-new-form" %}"
+                               class="nav-link p-0 text-muted">
+                                Add New record for problem to Solve
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "problems-list-private" %}"
+                               class="nav-link p-0 text-muted">
+                                My problems to Solve
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "problems-list-public" %}"
+                               class="nav-link p-0 text-muted">
+                                Common problems to Solve
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "account_login" %}"
+                               class="nav-link p-0 text-muted">
+                                Sign In
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "account_signup" %}"
+                               class="nav-link p-0 text-muted">
+                                Sign Up
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url "user_country" %}"
+                               class="nav-link p-0 text-muted">
+                                My Country
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-6">
+                    <h5>Partners</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2">
+                            <a target="_blank" href="https://stdiff.io"
+                               class="nav-link p-0 text-muted">
+                                StDiff.io
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a target="_blank" href="https://myaigf.online"
+                               class="nav-link p-0 text-muted">
+                                MyAIGf.online
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between py-4 my-4 border-top">
+
+                <div class="col-8 d-flex">
+                    <div class="text-muted">
+                        <div>
+                            &copy; {% now "Y" %} Armonia.day
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-4 text-end text-sm-center">
+
+                </div>
+            </div>
+        </footer>
+    </div>
+</footer>

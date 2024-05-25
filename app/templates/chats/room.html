@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load chats %}
+
+{% block title %}
+
+    Armonia.day - Chat with AI Therapist {{ problem.name }}
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+        {% if problem.is_premium %}
+            <div class="alert alert-warning">
+                This is <b>👑 Premium AI Therapist</b>. You have {{ api_key.usage_times_web }}/{{ api_key.premium_limit }} messages for Premium AI Therapist. <a href="{% url 'pricing' %}">Add more</a>
+            </div>
+        {% else %}
+            <div class="alert alert-light">
+                This is <b>Free AI Therapist</b> based on very simple AI model. You have {{ api_key.usage_free_times_daily }}/10 daily free messages. 👑 <a href="{% url 'pricing' %}">Get Premium AI Model</a>
+            </div>
+        {% endif %}
+
+        <div>
+            <section class="gradient-custom overflow-auto rounded-2" id="chat_window" style="height: 50vh;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 p-1 p-md-3">
+                            <ul class="list-unstyled text-white">
+                                {% for message in chat_messages reversed %}
+                                    {{ message|chat_message_view }}
+                                    {% if not message.date_time_read %}
+                                        <script>
+                                          startObserveMessage('{{message.snowflake_id}}');
+                                        </script>
+                                    {% endif %}
+                                {% endfor %}
+                                <div id='messages'></div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="alert alert-success m-2" style="display: none" id="typingMessage">
+            <img alt="Loading..." src="{% static 'main/assets/loaders/hearts.svg' %}" height="25px;"> AI Therapist is typing...
+        </div>
+        <div>
+            <div hx-ext="ws,utf-fixer" ws-connect="/chat/{{ slug }}/">
+                <form ws-send="">
+                    <div class="row">
+                        <div class="col-10 pe-0">
+                            <div class="form-outline form-white mt-2 text-center">
+                                <textarea class="form-control"
+                                          id="textAreaMessage"
+                                          rows="3"
+                                          name="message"
+                                          placeholder="Your message here..."
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="col-2 ps-1">
+                            <div>
+                                <button type="submit"
+                                        class="btn btn-success btn-lg w-100 p-1 mt-2"
+                                        id="sendMessageBtn"
+                                        title="[Ctrl + Enter] to send your message"
+                                ><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+{#                    {% include "snippets/notifications/add_telegram.html" %}#}
+                    <div class="row">
+{#                        <div class="col-md-6 col-12">#}
+{#                            <p class="m-2">#}
+{#                                <a data-bs-toggle="collapse" href="#collapseCommands" role="button" aria-expanded="true" aria-controls="collapseCommands">#}
+{#                                    Command examples <i class="fa-solid fa-chevron-down"></i>#}
+{#                                </a>#}
+{#                            </p>#}
+{#                            <div class="collapse m-3 show" id="collapseCommands">#}
+{#                                <div class="m-2 mb-4 text-shadow text-left align-items-start">#}
+{#                                    Chatting commands:<br>#}
+{#                                    - "<span class='on-click-room-link' onclick='putCommandToChatArea(this)'>What can you do?</span>"<br>#}
+{#                                    - "<span class='on-click-room-link' onclick='putCommandToChatArea(this)'>Continue</span>"<br>#}
+{#                                    - "<span class='on-click-room-link' onclick='putCommandToChatArea(this)'>Describe in details for me, please</span>"<br>#}
+{#                                    - "<span class='on-click-room-link' onclick='putCommandToChatArea(this)'>Yeah, I like that!</span>"<br>#}
+{#                                    - "<span class='on-click-room-link' onclick='putCommandToChatArea(this)'>Do you know a joke?</span>"<br>#}
+{#                                    - "<span class='on-click-room-link' onclick='putCommandToChatArea(this)'>Tell me more, please</span>"<br>#}
+{#                                    - "<span class='on-click-room-link' onclick='putCommandToChatArea(this)'>Do you want to go walk with me?</span>"<br>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+                        <div class="col-md-6 col-12">
+                            <p class="m-2">
+                                <a data-bs-toggle="collapse" href="#collapseGFCard" role="button" aria-expanded="true" aria-controls="collapseGFCard">
+                                    View problem to Solve Card <i class="fa-solid fa-chevron-down"></i>
+                                </a>
+                            </p>
+                            <div class="collapse m-3 show" id="collapseGFCard">
+                                <div>
+                                    {% include 'snippets/problems/problem_card.html' with problem=problem is_hide_btn=True %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-center m-2">
+            <div>
+                <a class="btn btn-light w-100" href="{% url 'problems-list-private-active' %}">My Active chats</a>
+            </div>
+            <div class="mt-2">
+                <a class="btn btn-light w-100" href="{% url 'problems-list-private' %}">My problems to Solve</a>
+            </div>
+            <div class="mt-2">
+                <a class="btn btn-light w-100" href="{% url 'problems-list-public' %}">Common problems to Solve</a>
+            </div>
+        </div>
+
+    </main>
+
+
+{% endblock %}
+
+
+{% block extra_head %}
+    <script src="https://unpkg.com/htmx.org@1.9.10" charset="utf-8" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/ws.js" charset="utf-8"></script>
+    <script>
+      htmx.defineExtension('utf-fixer', {
+        transformResponse: function (text, xhr, elt) {
+          // Idk why, but this backward transformation does the thing (smiles are fixed after that) - from \ud83d\ude18 to normal smiles
+          const data = JSON.parse(text);
+          const typingMessage = htmx.find("#typingMessage");
+          typingMessage.style.display = "none";
+          // console.log(data.message)
+          playSound();
+          return JSON.stringify(data);
+        }
+      })
+
+      function playSound() {
+        var aSound = document.createElement('audio');
+        aSound.setAttribute('src', '/media/audio/beep.wav');
+        aSound.play();
+      }
+
+    </script>
+
+    <script>
+      const keys = {}
+      window.addEventListener('keydown', (ev) => {
+        keys[ev.key] = true
+      }) 
+      window.addEventListener('keyup', (ev) => {
+        if (keys['Control'] && keys['Enter']) {
+          clickSendButton();
+        }
+        keys[ev.key] = false
+      })
+
+      function clickSendButton() {
+        const sendMessageBtn = htmx.find("#sendMessageBtn");
+        sendMessageBtn.click();
+      }
+
+      function scrollDown() {
+        const chatWindow = htmx.find("#chat_window");
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      function disableSendBtn() {
+        const sendMessageBtn = htmx.find("#sendMessageBtn");
+        sendMessageBtn.disabled = true;
+      }
+
+      function putCommandToChatArea(obj) {
+        let textToPlace = obj.innerText;
+        const textAreaMessage = htmx.find("#textAreaMessage");
+        textAreaMessage.value = textToPlace;
+        textAreaMessage.focus();
+      }
+
+      function enableSendBtn() {
+        const sendMessageBtn = htmx.find("#sendMessageBtn");
+        sendMessageBtn.disabled = false;
+      }
+
+      var myEventListenerForMessages = htmx.on("htmx:wsAfterMessage", function (evt) {
+        let message = JSON.parse(evt.detail.message);
+        let snowflake_id = message.snowflake_id;
+        // scrollDown();
+        const textAreaMessage = htmx.find("#textAreaMessage");
+        textAreaMessage.focus();
+        textAreaMessage.value = "";
+        startObserveMessage(snowflake_id);
+        enableSendBtn();
+      });
+
+
+      var myEventListenerForBeforeSend = htmx.on("htmx:wsBeforeSend", function (evt) {
+        const textAreaMessage = htmx.find("#textAreaMessage");
+        if (textAreaMessage.value === "") {
+          textAreaMessage.focus();
+        } else {
+          disableSendBtn();
+          setTimeout(function () {
+            const typingMessage = htmx.find("#typingMessage");
+            console.log(typingMessage.display)
+            typingMessage.style.display = "block";
+          }, 1500);
+        }
+      });
+
+      htmx.onLoad(function (e) {
+        const textAreaMessage = htmx.find("#textAreaMessage");
+        const sendMessageBtn = htmx.find("#sendMessageBtn");
+        scrollDown();
+        textAreaMessage.focus();
+        sendMessageBtn.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+      })
+
+      let latestMessageId = "";
+
+      function startObserveMessage(msgId) {
+        const messageBottom = document.getElementById(msgId);
+        if (messageBottom == null) {
+          return
+        }
+        const scroller = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const read_icon_area = document.getElementById("msgid" + msgId);
+              latestMessageId = msgId;
+              setTimeout(readChatMessage, 4000, [msgId]);
+              read_icon_area.innerHTML = "<i class='text-info fa-solid fa-check-double'></i>";
+              scroller.unobserve(messageBottom);
+            }
+          });
+        });
+        scroller.observe(messageBottom);
+      }
+
+      // Get a specific Cookies from a Cookie string
+      function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
+      function readChatMessage(msgId) {
+        // To prevent multiple API calls to the server
+        if (latestMessageId.toString() !== msgId.toString()) {
+          return
+        }
+        // Define the API URL
+        const apiUrl = '/api/chats/read_all_messages/';
+        const data = {message_snowflake_id: msgId.toString()};
+        const requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie("csrftoken"),  // To resolve CSRF protection
+          },
+          body: JSON.stringify(data),
+        };
+
+        // Make a GET request
+        fetch(apiUrl, requestOptions)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+
+
+    </script>
+{% endblock %}
+
+

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block title %}
+    Armonia.day - Problem '{{ object.preset_name }}'
+{% endblock %}
+{% block description %}
+    Armonia.day - Problem '{{ object.preset_name }}'. Prompt: '{{ object.prompt }}'
+{% endblock %}
+{% load variables %}
+
+{% block content %}
+    {% setvar object as problem %}
+    <main>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mt-4">
+                <li class="breadcrumb-item"><a href="{% url 'problems-list-public' %}">Problem</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Problem '{{ problem.preset_name }}'</li>
+            </ol>
+        </nav>
+        <div class="table-responsive">
+            {% include "snippets/problems/details.html" with problem=problem is_full=True %}
+
+            {% if not user.is_connected_notifications %}
+                <div class="container">
+                    <a href="{% url "user_notification_connections" %}">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="p-3">
+                                <img src="{% static 'main/assets/images/service_provider_telegram_icon.svg' %}"
+                                     height="30"
+                                     alt="Telegram"
+                                     data-bs-toggle-tooltip="tooltip"
+                                     data-bs-title="Telegram">
+                            </div>
+                            <div>
+                                Add Telegram notifications for your Problems to Solve status updates
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+
+        </div>
+    </main>
+{% endblock %}

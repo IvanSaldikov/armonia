@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Armonia.day - Purchasing Plan
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div id="my-store-104306265"></div>
+        {% block extra_js %}
+            <div>
+                <script data-cfasync="false" type="text/javascript" src="https://app.ecwid.com/script.js?104306265&data_platform=code&data_date=2024-05-21" charset="utf-8"></script><script type="text/javascript"> xProductBrowser("categoriesPerRow=3","views=grid(20,3) list(60) table(60)","categoryView=grid","searchView=list","id=my-store-104306265");</script>
+            </div>
+        {% endblock %}
+
+    
+    </main>
+{% endblock %}
+
+{% block extra_head %}
+    {% if not DEBUG and not TESTING %}
+        <!-- Google tag (gtag.js) event -->
+        <script>
+          gtag('event', 'ads_conversion_Begin_checkout_Page_loa_1', {
+            // <event_parameters>
+          });
+        </script>
+    {% endif %}
+{% endblock %}

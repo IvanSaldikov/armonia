@@ -1,0 +1,89 @@
+image: docker:latest
+
+services:
+  - docker:24.0.6
+
+stages:
+  - build
+  - deploy
+
+variables:
+  main_branch_name: "main"
+  VENV_PATH: "venv"
+
+
+.prepare_env:
+  variables:
+    VENV_PATH:"venv"
+  image: registry.gitlab.com/python-devs/ci-images:active
+  before_script:
+    - python3.11 -m venv "${VENV_PATH}"
+    - . venv/bin/activate
+    - python3.11 -m pip install --no-cache-dir --upgrade pip wheel
+    - python3.11 -m pip install --no-cache-dir -r requirements-cicd.txt
+
+
+build_main_app:
+  environment:
+    name: main
+    deployment_tier: development
+  stage: build
+  script:
+    - echo  ${DOCKER_PASSWORD} | docker login -u ${DOCKER_LOGIN} --password-stdin
+    - docker build ./ -t ${MAIN_DOCKER_IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}
+    - docker push ${MAIN_DOCKER_IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}
+  rules:
+    - if: $CI_COMMIT_BRANCH == $main_branch_name
+  #  needs:
+  #    - job: run_python_unit_tests
+  when: manual
+
+.deploy:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $main_branch_name
+  script:
+    - echo "The commit Branch is '$CI_COMMIT_BRANCH'"
+    - echo "The CI Commit Short SHA is '$CI_COMMIT_SHORT_SHA'"
+    - echo "Docker file which will be used '$COMPOSE_FILE'"
+    - echo "Project dir is '$PROJECT_DIR'"
+    - echo "Docker path is '$DOCKER_PATH'"
+    - echo "Server IP is '$SERVER_IP'"
+    - mkdir -p test
+    - cp ${SECRET_KEY} test/id
+    - chmod 400 test/id
+    - ssh -o StrictHostKeyChecking=no -i test/id ${SSH_USERNAME}@${SERVER_IP} "echo 1"
+    - scp -o StrictHostKeyChecking=no -i test/id ${env} ${SSH_USERNAME}@${SERVER_IP}:${PROJECT_DIR}
+    - |
+      ssh -o StrictHostKeyChecking=no -i test/id ${SSH_USERNAME}@${SERVER_IP} \
+      "cd '${PROJECT_DIR}' && \
+      docker login -u ${DOCKER_LOGIN} -p ${DOCKER_PASSWORD} && \
+      mv ${env_file_name} .env && \
+      export CI_COMMIT_SHORT_SHA=${CI_COMMIT_SHORT_SHA} && \
+      export MAIN_DOCKER_IMAGE_NAME=${DOCKER_PATH} && \
+      docker compose -f ${COMPOSE_FILE} up -d --build --remove-orphans && \
+      sleep 30 && \
+      docker compose -f ${COMPOSE_FILE} exec backend python manage.py migrate --no-input && \
+      docker compose -f ${COMPOSE_FILE} exec backend python manage.py collectstatic --no-input --clear && \
+      docker system prune -a -f"
+    - rm -rf test/id
+    - rm -rf .env
+
+
+deploy_prod:
+  needs:
+    - build_main_app
+  environment:
+    name: main
+    deployment_tier: production
+  when: on_success
+  stage: deploy
+  extends: .deploy
+  variables:
+    COMPOSE_FILE: ${COMPOSE_FILE_PROD}
+    PROJECT_DIR: ${MAIN_SERVER_FOLDER_DIR}
+    DOCKER_PATH: ${MAIN_DOCKER_IMAGE_NAME}
+    SSH_USERNAME: ${SSH_USERNAME_PROD}
+    SECRET_KEY: ${SECRET_KEY_PROD}
+    SERVER_IP: ${MAIN_SERVER_IP}
+    env: ${env_prod}
+    env_file_name: "env_prod"

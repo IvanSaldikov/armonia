@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{# Load the tag library #}
+{% load django_bootstrap5 %}
+
+{% block title %}
+
+    Add New Problem to Solve
+
+{% endblock %}
+
+{% block description %}
+
+    Describe what are you going to solve
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+        <h1 class="display-6 text-center my-4">AI Therapist: Add new record of my problem to Solve</h1>
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'problems-list-private' %}">My problems to Solve</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Add new record</li>
+            </ol>
+        </nav>
+
+        <div class="table-responsive">
+
+            <form action="{% url "problems-add-new-run" %}"
+                  method="post"
+                  enctype="multipart/form-data"
+            >{% csrf_token %}
+                <div class="alert alert-light">
+                    {% bootstrap_form form %}
+                </div>
+                <div class="alert alert-light text-center">
+
+                    <input type="submit"
+                           class="btn btn-lg btn-success w-100 btn-block"
+                           value="Add"
+                           id="add_new_problem_to_solve"
+                    >
+                </div>
+            </form>
+
+        </div>
+
+    </main>
+
+
+{% endblock %}
+
+
+{% block extra_head %}
+
+{% endblock %}
+

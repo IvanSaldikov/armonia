@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% load django_bootstrap5 %}
+
+{% load static %}
+
+{% load notifications %}
+
+{% load variables %}
+
+{% block title %}
+
+    Armonia.day - Notification Preferences
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+        <h1 class="display-6 text-center my-4">My Notification Preferences</h1>
+
+        <div class="container my-4">
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+
+                    <div class="alert alert-light">
+
+                        Connect Notifications to communicate in your Favourite Messenger with AI Therapist.
+
+                        {% for service_provider in SERVICE_PROVIDERS %}
+                            <div class="my-4 h5 text-center">
+                                <div class="mb-2">
+                                    <img src="{% static 'main/assets/images/service_provider_telegram_icon.svg' %}"
+                                         height="50"
+                                         alt="Telegram"
+                                         data-bs-toggle-tooltip="tooltip"
+                                         data-bs-title="Telegram">
+                                </div>
+                                <div class="mb-2">
+                                    {{ service_provider.name }}
+                                </div>
+                                {% setvar service_provider|get_notification_connection:user as connection %}
+                                {% if connection %}
+
+                                    <div class="badge bg-success mb-2">
+                                        CONNECTED [{{ connection.data.message.chat.username }}]
+                                    </div>
+                                    <div>
+                                        <a
+                                                data-bs-toggle="modal" data-bs-target="#removeConnection_{{ service_provider.name }}"
+                                                class="btn btn-light btn-sm"
+                                                type="button"
+                                        ><i class="fa fa-link-slash"></i> Disconnect</a>
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade"
+                                             id="removeConnection_{{ service_provider.name }}"
+                                             data-bs-backdrop="static"
+                                             data-bs-keyboard="false"
+                                             tabindex="-1"
+                                             style="z-index: 1250"
+                                             aria-labelledby="removeConnection_{{ service_provider.name }}Label"
+                                             aria-hidden="true"
+                                        >
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"
+                                                            id="removeConnection_{{ service_provider.name }}Label"
+                                                        >Disconnect from "{{ service_provider.name }}"</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are your sure you want to disconnect your Armonia.day account
+                                                        from "{{ service_provider.name }}"?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button
+                                                                type="button"
+                                                                class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">No, leave as it is
+                                                        </button>
+                                                        <a type="button"
+                                                           href="{% url 'remove_notification_connection' service_provider.name %}"
+                                                           class="btn btn-success">Yes, disconnect</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                {% else %}
+
+                                    <a href="{{ service_provider.connection_link }}"
+                                       class="btn btn-success"
+                                       target="_blank"
+                                    >Connect</a>
+
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                </div>
+                <div class="col-0 col-md-2"></div>
+            </div>
+        </div>
+
+
+    </main>
+
+
+{% endblock %}
+
+
+{% block extra_head %}
+{% endblock %}

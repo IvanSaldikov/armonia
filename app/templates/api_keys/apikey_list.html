@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+
+    Armonia.day - API Keys
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+
+        <h1 class="display-6 text-center my-4">My API Key</h1>
+
+        <div class="table-responsive">
+
+            {% for api_key in object_list %}
+                {% if api_key.is_blocked %}
+                    <div class="alert alert-danger" role="alert">
+                        Your API Key has been blocked. If you don't know why - please contact us at
+                        <a href="{% url "contact-us" %}">Contact Us page</a> to know more.
+                    </div>
+                {% endif %}
+
+
+                {% if not api_key.has_limit_reached %}
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="col-md-3 col-1"></div>
+                            <div class="col-md-6 col-10">
+
+                                <div class="alert alert-light" role="alert">
+                                    You can generate your PRIVATE AI image from the Web interface OR with
+                                    REST API calls (see the API key below).
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-3 col-1"></div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <div class="alert alert-light" role="alert">
+                    <div class="my-4 text-center">
+                        <label for="user-select-all" class="text-center">
+                            Set this API Key to the "Token" header if you want to generate AI Images
+                            with REST API calls
+                        </label>
+                    </div>
+                    <div class="d-flex justify-content-center mt-4">
+                        <div class="col-md-8 col-11">
+                            <input class="form-control w-100 mx-2"
+                                   style="text-align:center;"
+                                   type="text"
+                                   value="{{ api_key.api_key }}"
+                                   id="user-select-all"
+                                   disabled
+                            >
+                        </div>
+                        <div class="col-md-auto col-1">
+                            <img width="32px" height="32px" onclick="copyToClipboard()"
+                                 src="{% static "main/images/copy-svgrepo-com.svg" %}"
+                                 alt="Copy to Clipboard"
+                                 data-bs-toggle-tooltip="tooltip"
+                                 data-bs-title="Copy to Clipboard"
+                                 class="mx-2"
+                                 style="cursor:pointer;"/>
+                        </div>
+                    </div>
+                    <div class="my-4 text-center">
+                        Time used: {{ api_key.total_times_used }} / {{ api_key.limit }}
+                    </div>
+                    <div class="my-4 text-center">
+                        Created at: {{ api_key.created_at|date }}
+                    </div>
+                </div>
+
+
+            {% empty %}
+                <div class="alert alert-warning">
+                    No API Key yet
+                </div>
+                <div class="alert alert-light text-center">
+                    <form action="{% url "api-keys-add" %}" method="post">{% csrf_token %}
+                        {{ form.as_div }}
+                        <input
+                                type="submit"
+                                class="btn btn-lg btn-danger w-100 btn-block"
+                                value="Generate an API Key"
+                                id="gen_api_key"
+                                {% include 'snippets/google_analytics/manual_tag_js_call.html' %}
+                        >
+                    </form>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+    <script>
+      const copyToClipboard = async () => {
+        try {
+          const element = document.querySelector("#user-select-all");
+          await navigator.clipboard.writeText(element.value);
+          alert("Text copied to clipboard!");
+          // Optional: Display a success message to the user
+        } catch (error) {
+          alert("Failed to copy to clipboard:", error);
+          // Optional: Display an error message to the user
+        }
+      };
+    </script>
+
+{% endblock %}
+
+
+{% block extra_head %}
+    {% include 'snippets/google_analytics/manual_tag.html' with tag_name='conversion_event_submit_lead_form' %}
+{% endblock %}

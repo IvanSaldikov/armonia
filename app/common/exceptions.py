@@ -1,0 +1,2 @@
+class NotSupportedImgExtension(Exception):
+    pass

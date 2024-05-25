@@ -1,0 +1,31 @@
+<div class="card w-100">
+    <div class="card-body">
+        <div class="row row-cols-2">
+            <div class="col-12 col-md-8">
+                <div>
+                    <b class="mb-1">Type: </b>
+                    <div class="alert alert-light font-monospace" style="padding: 0.35rem !important;">
+                        {{ problem.problem_type }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mt-4">
+                <div class="mb-2">
+
+                <div class="alert alert-light text-center">
+                    <a class="btn btn-dark w-100"
+                       href="">
+                        <i class="fa-regular fa-copy"></i> Start writing...</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% block extra_head %}
+    {% include 'snippets/google_analytics/manual_tag.html' with tag_name='conversion_event_submit_lead_form_1' %}
+{% endblock %}

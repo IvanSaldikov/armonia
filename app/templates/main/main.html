@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Armonia.day - AI Therapist Online
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+        <div class="pricing-header p-3 pb-md-4 mt-4 mx-auto text-center">
+            <h1 class="display-5 fw-normal text-body-emphasis">Armonia.day</h1>
+            <p class="fs-5 text-body-secondary">AI Therapist Online</p>
+        </div>
+        <div class="text-center m-2">
+            <a href="{% url 'problems-list-private' %}">Problems to Solve with AI Therapist</a>
+        </div>
+        <div class="text-center m-2">
+            <a class="btn btn-light btn-lg" href="{% url 'problems-add-new-form' %}">Add problem to Solve</a>
+        </div>
+
+
+        <div class="row row-cols-1 row-cols-md-1 mb-3">
+            <div class="col">
+                <div class="card mb-1 rounded-2 shadow-sm gradient-custom">
+                    <div class="card-body">
+                        <h2 class="card-title pricing-card-title text-center">
+                            Chat with AI Therapist
+                        </h2>
+
+                        {% include 'snippets/problems/problem_card.html' with problem=default_problem %}
+
+                        <div class="text-center m-2">
+                            <a class="btn btn-light btn-lg" href="{% url 'problems-list-public' %}">Problems Examples</a>
+                        </div>
+                        <div class="text-center m-2">
+                            <a class="btn btn-light btn-lg" href="{% url 'problems-add-new-form' %}">Add your Problem to Solve</a>
+                        </div>
+                        <div class="text-center m-2">
+                            <a href="{% url 'problems-list-private' %}">My problems to Solve</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% load django_bootstrap5 %}
+
+{% load static %}
+
+{% block title %}
+
+    Armonia.day - My Country
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+
+        <h1 class="display-6 text-center my-4">My Country</h1>
+
+        {% load countries %}
+        {% get_country user.country_code as country %}
+
+        <div class="container my-4">
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+
+                    {% if country != "XX" %}
+                        <p class="alert alert-light">
+                            You're seeing content mostly related to your current country.
+                            According to your location your country is: <span class="h5">
+                            <i class="{{ country.flag_css }}"></i> {{ country.name }}</span>.
+                            You can change it anytime:
+                        </p>
+                    {% endif %}
+
+
+                    <div class="alert alert-light w-auto">
+                        <form class="form" id="change_language" method="post" action="{% url 'save_user_country' %}">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            <button
+                                    class="btn btn-success w-100"
+                                    type="submit"
+                                    value="{% trans "Save" %}"
+                            >{% trans "Save" %}</button>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="col-0 col-md-2"></div>
+            </div>
+        </div>
+
+    </main>
+
+
+{% endblock %}
+
+
+{% block extra_head %}
+{% endblock %}

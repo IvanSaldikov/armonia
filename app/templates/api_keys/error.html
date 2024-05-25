@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+
+    Armonia.day - Error while purchasing API Key
+
+{% endblock %}
+
+
+{% block content %}
+    <main>
+
+
+        <h1 class="display-6 text-center mb-4">Ooops...</h1>
+
+        <div class="table-responsive">
+            <div class="alert alert-light" role="alert">
+                <h5>Thank you for trying to purchase the API Key! There an error occurred. If this is happening because of
+                    us - feel free to contact us here: <a href="{% url 'contact-us' %}">Contact Us</a>.</h5>
+            </div>
+        </div>
+
+    </main>
+
+
+{% endblock %}
+
+
+{% block extra_head %}
+
+    <script>
+      const copyToClipboard = async () => {
+        try {
+          const element = document.querySelector(".user-select-all");
+          await navigator.clipboard.writeText(element.textContent);
+          alert("Text copied to clipboard!");
+          // Optional: Display a success message to the user
+        } catch (error) {
+          alert("Failed to copy to clipboard:", error);
+          // Optional: Display an error message to the user
+        }
+      };
+    </script>
+
+{% endblock %}

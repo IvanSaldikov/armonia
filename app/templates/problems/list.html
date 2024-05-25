@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% load static %}
+
+{% load bootstrap_pagination %}
+
+{% block title %}
+    {% if is_public %}
+        List of Common problems to solve with Free AI Therapist
+    {% elif is_active_chats %}
+        List of Active chats about the Problems to solve with Free AI Therapist
+    {% else %}
+        List of My problems to solve with Free AI Therapist
+    {% endif %}
+{% endblock %}
+
+{% block description %}
+    {% if is_public %}
+        List of Common problems to solve with Free AI Therapist
+    {% elif is_active_chats %}
+        List of Active chats about the Problems to solve with Free AI Therapist
+    {% else %}
+        List of My problems to solve with Free AI Therapist
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        {% if is_public %}
+            <div class="m-3">
+                <h1 class="display-1">Armonia.day</h1>
+                <h2>Supportive Free AI Therapist for Everyday</h2>
+                <h3 class="display-6">Chat with AI to Solve your problems*!</h3>
+            </div>
+        {% endif %}
+
+        <nav class="navbar navbar-expand-lg navbar-light rounded-1 m-2 border-3" style="background-color: #ffd4f8;">
+            <div class="container-fluid">
+                <span class="navbar-brand">
+                        {% if is_public %}
+                            List of Common problems
+                        {% elif is_active_chats %}
+                            List of Active problems to Solve
+                        {% else %}
+                            List of All my problems to Solve
+                        {% endif %}
+                </span>
+                <div>
+
+
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="true" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse show" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="btn btn-success opacity-75 btn-sm me-2 mt-1" aria-current="page" href="{% url 'problems-add-new-form' %}">Add problem to Solve</a>
+                        </li>
+                        {% if is_public %}
+                            <li class="nav-item me-2">
+                                <a class="btn btn-warning opacity-75 btn-sm mt-1" href="{% url 'problems-list-private' %}">List of my problems to Solve</a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="btn btn-light opacity-75 btn-sm mt-1" href="{% url 'problems-list-private-active' %}">My Active chats</a>
+                            </li>
+                        {% elif is_active_chats %}
+                            <li class="nav-item me-2">
+                                <a class="btn btn-light opacity-75 btn-sm mt-1" href="{% url 'problems-list-private' %}">List of my problems to Solve</a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="btn btn-light opacity-75 btn-sm mt-1" href="{% url 'problems-list-public' %}">Common problems to Solve</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item me-2">
+                                <a class="btn btn-light opacity-75 btn-sm mt-1" href="{% url 'problems-list-public' %}">Common problems to Solve</a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="btn btn-light opacity-75 btn-sm mt-1" href="{% url 'problems-list-private-active' %}">My Active chats</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="container">
+
+
+            {% for problem in page_obj %}
+                {% cycle '<div class="row"><div class="col-md-4 col-12">' '<div class="col-md-4 col-12">' '<div class="col-md-4 col-12">' %}
+
+                {% include 'snippets/problems/problem_card.html' with problem=problem %}
+
+                {% cycle '</div>' '</div>' '</div></div>' %}
+
+            {% empty %}
+                <div class="alert alert-light">
+                    <h2 class="display-6 text-center mb-4">No records of problems to Solve have been found</h2>
+                    <div class="text-center">
+                        <a class="btn btn-success btn-lg" href="{% url 'problems-add-new-form' %}">Add problem to Solve</a>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- Bootstrap pagination -->
+            {% if page_obj.has_other_pages %}
+                {% bootstrap_paginate page_obj range=5 show_prev_next="true" show_first_last="true" extra_pagination_classes="justify-content-center my-4" %}
+            {% endif %}
+
+        </div>
+        <div class="text-center m-2">
+            <a class="btn btn-light opacity-75" href="{% url 'problems-add-new-form' %}">Add problem to Solve</a>
+        </div>
+        <div class="text-center m-2">
+            {% if is_public %}
+                <div>
+                    <a class="btn btn-light opacity-75" href="{% url 'problems-list-private' %}">List of my problems to Solve</a>
+                </div>
+                <div class="mt-2">
+                    <a class="btn btn-light opacity-75" href="{% url 'problems-list-private-active' %}">My Active chats</a>
+                </div>
+            {% elif is_active_chats %}
+                <div>
+                    <a class="btn btn-light opacity-75" href="{% url 'problems-list-private' %}">List of my problems to Solve</a>
+                </div>
+                <div class="mt-2">
+                    <a class="btn btn-light opacity-75" href="{% url 'problems-list-public' %}">Examples of problems to Solve</a>
+                </div>
+            {% else %}
+                <div>
+                    <a class="btn btn-light opacity-75" href="{% url 'problems-list-public' %}">Examples of problems to Solve</a>
+                </div>
+                <div class="mt-2">
+                    <a class="btn btn-light opacity-75" href="{% url 'problems-list-private-active' %}">My Active chats</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </main>
+{% endblock %}
+

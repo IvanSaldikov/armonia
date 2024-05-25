@@ -1,0 +1,44 @@
+{% load static %}
+
+<div class="card my-4">
+    <div class="card-body">
+        <p class="card-text mb-3"><span class="h3 display-6">{{ problem.problem_type }}</span></p>
+        <p class="card-text mb-1" title="Premium AI Model is very smart and helpful to conduct more deep therapy with your personality"><b>👑 Premium AI Model</b>:
+            {% if problem.is_premium %}
+                <span class="badge text-bg-success">Yes</span>
+            {% else %}
+                <span class="badge text-bg-secondary">No</span>
+            {% endif %}
+        </p>
+        {% if problem.therapist_country or problem.therapist_name or problem.therapist_name %}
+            <p class="card-text mb-1"><b>👩‍⚕ AI Therapist</b>:
+            {% if problem.therapist_country %}
+                <img src="{{ problem.therapist_country.flag }}" alt="{{ problem.therapist_country }}" title="{{ problem.get_therapist_country_display }}">
+            {% endif %}
+            {% if problem.therapist_name %}
+                {{ problem.therapist_name }}
+            {% endif %}
+            {% if problem.therapist_name %}
+                {{ problem.therapist_gender }}
+            {% endif %}
+            </p>
+        {% endif %}
+        <p class="card-text mb-1"><b>📝 Problem to Solve</b>: {{ problem.problem_description }}</p>
+        {% if problem.user_age %}
+            <p class="card-text mb-1"><b>You set your age</b>: {{ problem.user_age }}</p>
+        {% endif %}
+        <p class="card-text mb-1">
+            {% if problem.latest_message_text %}
+                <b>{{ problem.latest_message_date }} UTC</b>: {{ problem.latest_message_text|truncatechars:105 }}
+            {% endif %}
+        </p>
+        {% if not is_hide_btn %}
+            <div class="text-center m-2 mt-4">
+                <a href="{% url 'room-get-or-create' problem.slug %}" id="submit" class="btn btn-success">
+                    Enter the AI Therapist room
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</div>

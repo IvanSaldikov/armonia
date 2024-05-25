@@ -1,0 +1,19 @@
+{% load static %}
+
+{% if not user.is_connected_notifications %}
+    <div class="container">
+        <div class="m-3">
+            <a href="{% url "user_notification_connections" %}" class="btn btn-light w-100">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="{% static 'main/assets/images/service_provider_telegram_icon.svg' %}"
+                         height="30"
+                         alt="Telegram"
+                         data-bs-toggle-tooltip="tooltip"
+                         data-bs-title="Connect Telegram to communicate with AI Therapists with your favourite messanger"
+                         class="m-1"
+                    > Connect Telegram
+                </div>
+            </a>
+        </div>
+    </div>
+{% endif %}
